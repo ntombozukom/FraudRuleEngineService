@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fraud-engine-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=fr@udAdminUserP@ssword
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "fr@udAdminUserP@ssword" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fraud-engine-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=FraudRuleEngineDb;User Id=sa;Password=fr@udAdminUserP@ssword;TrustServerCertificate=true
+    ports:
+      - "5001:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver-data:

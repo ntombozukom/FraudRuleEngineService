@@ -1,0 +1,179 @@
+@baseUrl = http://localhost:5001
+
+### ============================================================
+### FRAUD RULES — View and configure
+### ============================================================
+
+### List all fraud rules
+GET {{baseUrl}}/api/fraud-rules
+
+### Disable a rule
+PUT {{baseUrl}}/api/fraud-rules/AfterHoursTransaction
+Content-Type: application/json
+
+{
+  "isEnabled": false
+}
+
+### Re-enable a rule
+PUT {{baseUrl}}/api/fraud-rules/AfterHoursTransaction
+Content-Type: application/json
+
+{
+  "isEnabled": true
+}
+
+### Update HighValueTransaction threshold to R100,000
+PUT {{baseUrl}}/api/fraud-rules/HighValueTransaction
+Content-Type: application/json
+
+{
+  "parameters": "{\"ThresholdAmount\": 100000}"
+}
+
+### Reset HighValueTransaction threshold back to R50,000
+PUT {{baseUrl}}/api/fraud-rules/HighValueTransaction
+Content-Type: application/json
+
+{
+  "parameters": "{\"ThresholdAmount\": 50000}"
+}
+
+### ============================================================
+### TRANSACTIONS — Evaluate for fraud
+### ============================================================
+
+### High-value transaction (should trigger HighValueTransaction rule)
+POST {{baseUrl}}/api/transactions/evaluate
+Content-Type: application/json
+
+{
+  "accountNumber": "1234567890",
+  "amount": 75000,
+  "currency": "ZAR",
+  "merchantName": "Luxury Jewellers",
+  "category": "Shopping",
+  "transactionDate": "2025-01-15T14:30:00",
+  "location": "Sandton City",
+  "country": "ZA",
+  "channel": 1
+}
+
+### Clean transaction (should NOT trigger any rules)
+POST {{baseUrl}}/api/transactions/evaluate
+Content-Type: application/json
+
+{
+  "accountNumber": "1234567890",
+  "amount": 150,
+  "currency": "ZAR",
+  "merchantName": "Woolworths",
+  "category": "Groceries",
+  "transactionDate": "2025-01-15T10:00:00",
+  "location": "Cape Town",
+  "country": "ZA",
+  "channel": 1
+}
+
+### Cross-border transaction (should trigger CrossBorderTransaction rule)
+POST {{baseUrl}}/api/transactions/evaluate
+Content-Type: application/json
+
+{
+  "accountNumber": "9876543210",
+  "amount": 5000,
+  "currency": "USD",
+  "merchantName": "Amazon US",
+  "category": "Online Shopping",
+  "transactionDate": "2025-01-15T12:00:00",
+  "location": "Seattle",
+  "country": "US",
+  "channel": 0
+}
+
+### After-hours transaction (should trigger AfterHoursTransaction rule)
+POST {{baseUrl}}/api/transactions/evaluate
+Content-Type: application/json
+
+{
+  "accountNumber": "6211145678",
+  "amount": 2500,
+  "currency": "ZAR",
+  "merchantName": "Night Owl Pharmacy",
+  "category": "Health",
+  "transactionDate": "2025-01-15T02:30:00",
+  "location": "Johannesburg",
+  "country": "ZA",
+  "channel": 3
+}
+
+### High-value + cross-border (should trigger multiple rules)
+POST {{baseUrl}}/api/transactions/evaluate
+Content-Type: application/json
+
+{
+  "accountNumber": "1234567890",
+  "amount": 120000,
+  "currency": "GBP",
+  "merchantName": "Harrods",
+  "category": "Luxury",
+  "transactionDate": "2025-01-15T15:00:00",
+  "location": "London",
+  "country": "GB",
+  "channel": 1
+}
+
+### ============================================================
+### FRAUD ALERTS — List, filter, review
+### ============================================================
+
+### Get all alerts (paginated)
+GET {{baseUrl}}/api/fraud-alerts?page=1&pageSize=20
+
+### Filter alerts by status
+GET {{baseUrl}}/api/fraud-alerts?status=Open
+
+### Filter alerts by severity
+GET {{baseUrl}}/api/fraud-alerts?severity=High
+
+### Filter by rule name
+GET {{baseUrl}}/api/fraud-alerts?ruleName=HighValueTransaction
+
+### Filter by account number
+GET {{baseUrl}}/api/fraud-alerts?accountNumber=1234567890
+
+### Filter by date range
+GET {{baseUrl}}/api/fraud-alerts?from=2025-01-01&to=2025-12-31
+
+### Get alert by AlertReference (replace with real alertReference from GET /api/fraud-alerts)
+GET {{baseUrl}}/api/fraud-alerts/3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+### Mark alert as under review (replace with real alertReference)
+PATCH {{baseUrl}}/api/fraud-alerts/3fa85f64-5717-4562-b3fc-2c963f66afa6/review
+Content-Type: application/json
+
+{
+  "status": 1,
+  "reviewedBy": "analyst@capitec.co.za"
+}
+
+### Mark alert as reviewed (replace with real alertReference)
+PATCH {{baseUrl}}/api/fraud-alerts/3fa85f64-5717-4562-b3fc-2c963f66afa6/review
+Content-Type: application/json
+
+{
+  "status": 2,
+  "reviewedBy": "analyst@capitec.co.za"
+}
+
+### Dismiss an alert (replace with real alertReference)
+PATCH {{baseUrl}}/api/fraud-alerts/3fa85f64-5717-4562-b3fc-2c963f66afa6/review
+Content-Type: application/json
+
+{
+  "status": 3,
+  "reviewedBy": "analyst@capitec.co.za"
+}
+
+### Get alert statistics
+GET {{baseUrl}}/api/fraud-alerts/statistics
