@@ -1,3 +1,5 @@
+# Docker:    http://localhost:5001
+# Local dev: https://localhost:7171 (or http://localhost:5025)
 @baseUrl = http://localhost:5001
 
 ### ============================================================
