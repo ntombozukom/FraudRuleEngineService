@@ -1,13 +1,8 @@
 ## Description
 <!-- Provide a clear, concise summary of your changes. What problem does this solve? -->
 
-
-
 ## Key Changes
 <!-- List the main changes made in bullet points -->
--
--
--
 
 ## What type of PR is this? (check all applicable)
 - [ ] 🍕 Feature
@@ -24,32 +19,11 @@
 
 ## Related Tickets & Documents
 <!-- Link any related issues, tickets, or documentation -->
-- Closes #
-- Related to #
-
-## Testing
-<!-- Describe how you tested your changes -->
-
-| Test Type | Status | Details |
-|-----------|--------|---------|
-| Unit Tests | ⬜ Pass / ⬜ Fail | X tests |
-| Integration Tests | ⬜ Pass / ⬜ Fail | X tests |
-| Manual Testing | ⬜ Done / ⬜ N/A | |
-
-### Test Commands
-```bash
-dotnet test
-```
 
 ## Screenshots/Recordings
 <!-- If applicable, add screenshots or recordings to help explain your changes -->
-<!-- For backend-only changes, write: N/A — backend-only change -->
-
-
 
 ## Checklist
-<!-- Ensure all items are completed before requesting review -->
-
 ### Code Quality
 - [ ] Code follows project coding standards and conventions
 - [ ] No hardcoded values (use constants/configuration)
@@ -72,7 +46,6 @@ dotnet test
 - [ ] 📝 Other: <!-- specify -->
 
 ## Database Changes
-<!-- If applicable, describe any database schema changes -->
 - [ ] No database changes
 - [ ] Migration added
 - [ ] Seed data updated
