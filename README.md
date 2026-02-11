@@ -58,7 +58,12 @@ docker-compose up --build
 
 The API will be available at **http://localhost:5001** with Swagger UI at the root.
 
-SQL Server runs on port **1434**. See `.env.example` for credential setup.
+#### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SA_PASSWORD` | SQL Server password | Set in docker-compose.yml |
+| `ConnectionStrings__DefaultConnection` | Database connection string | Set in docker-compose.yml |
 
 ### Option 2: Local Development
 
