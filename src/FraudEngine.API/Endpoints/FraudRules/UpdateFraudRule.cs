@@ -18,7 +18,8 @@ public static class UpdateFraudRule
             {
                 RuleName = ruleName,
                 IsEnabled = request.IsEnabled,
-                Parameters = request.Parameters
+                Parameters = request.Parameters,
+                ModifiedBy = request.ModifiedBy
             });
             return result is null ? Results.NotFound() : Results.Ok(result);
         })

@@ -7,6 +7,7 @@ public static class Routes
     public const string Transactions = $"{ApiBase}/transactions";
     public const string FraudAlerts = $"{ApiBase}/fraud-alerts";
     public const string FraudRules = $"{ApiBase}/fraud-rules";
+    public const string AuditLogs = $"{ApiBase}/audit-logs";
 
     public static class TransactionRoutes
     {

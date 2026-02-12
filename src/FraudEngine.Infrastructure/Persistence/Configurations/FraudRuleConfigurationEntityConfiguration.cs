@@ -12,6 +12,8 @@ public class FraudRuleConfigurationEntityConfiguration : IEntityTypeConfiguratio
         builder.Property(r => r.RuleName).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Parameters).HasMaxLength(1000);
         builder.Property(r => r.Description).HasMaxLength(500);
+        builder.Property(r => r.CreatedBy).HasMaxLength(256).IsRequired();
+        builder.Property(r => r.LastModifiedBy).HasMaxLength(256);
 
         builder.HasIndex(r => r.RuleName).IsUnique();
     }

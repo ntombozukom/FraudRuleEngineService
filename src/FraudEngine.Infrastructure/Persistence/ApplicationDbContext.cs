@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<FraudAlert> FraudAlerts => Set<FraudAlert>();
     public DbSet<FraudRuleConfiguration> FraudRuleConfigurations => Set<FraudRuleConfiguration>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +32,7 @@ public class ApplicationDbContext : DbContext
                 Parameters = "{\"ThresholdAmount\": 50000}",
                 Description = "Flags transactions exceeding a configurable amount threshold.",
                 CreatedAt = seedDate,
+                CreatedBy = "System",
                 UpdatedAt = seedDate
             },
             new FraudRuleConfiguration
@@ -41,6 +43,7 @@ public class ApplicationDbContext : DbContext
                 Parameters = "{\"MaxTransactions\": 3, \"TimeWindowMinutes\": 5}",
                 Description = "Flags accounts with multiple transactions within a short time window.",
                 CreatedAt = seedDate,
+                CreatedBy = "System",
                 UpdatedAt = seedDate
             },
             new FraudRuleConfiguration
@@ -51,6 +54,7 @@ public class ApplicationDbContext : DbContext
                 Parameters = "{\"HomeCountry\": \"ZA\"}",
                 Description = "Flags transactions originating from outside the home country.",
                 CreatedAt = seedDate,
+                CreatedBy = "System",
                 UpdatedAt = seedDate
             },
             new FraudRuleConfiguration
@@ -61,6 +65,7 @@ public class ApplicationDbContext : DbContext
                 Parameters = "{\"StartHour\": 23, \"EndHour\": 5}",
                 Description = "Flags transactions occurring during unusual hours (23:00-05:00).",
                 CreatedAt = seedDate,
+                CreatedBy = "System",
                 UpdatedAt = seedDate
             },
             new FraudRuleConfiguration
@@ -71,6 +76,7 @@ public class ApplicationDbContext : DbContext
                 Parameters = "{\"MinHistoryCount\": 10, \"UnusualThresholdPercent\": 5}",
                 Description = "Flags transactions in spending categories unusual for the account.",
                 CreatedAt = seedDate,
+                CreatedBy = "System",
                 UpdatedAt = seedDate
             }
         );

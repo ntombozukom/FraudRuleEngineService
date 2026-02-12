@@ -14,7 +14,8 @@ PUT {{baseUrl}}/api/fraud-rules/AfterHoursTransaction
 Content-Type: application/json
 
 {
-  "isEnabled": false
+  "isEnabled": false,
+  "modifiedBy": "admin@capitec.co.za"
 }
 
 ### Re-enable a rule
@@ -22,7 +23,8 @@ PUT {{baseUrl}}/api/fraud-rules/AfterHoursTransaction
 Content-Type: application/json
 
 {
-  "isEnabled": true
+  "isEnabled": true,
+  "modifiedBy": "admin@capitec.co.za"
 }
 
 ### Update HighValueTransaction threshold to R100,000
@@ -30,7 +32,8 @@ PUT {{baseUrl}}/api/fraud-rules/HighValueTransaction
 Content-Type: application/json
 
 {
-  "parameters": "{\"ThresholdAmount\": 100000}"
+  "parameters": "{\"ThresholdAmount\": 100000}",
+  "modifiedBy": "admin@capitec.co.za"
 }
 
 ### Reset HighValueTransaction threshold back to R50,000
@@ -38,7 +41,8 @@ PUT {{baseUrl}}/api/fraud-rules/HighValueTransaction
 Content-Type: application/json
 
 {
-  "parameters": "{\"ThresholdAmount\": 50000}"
+  "parameters": "{\"ThresholdAmount\": 50000}",
+  "modifiedBy": "admin@capitec.co.za"
 }
 
 ### ============================================================
@@ -160,7 +164,7 @@ Content-Type: application/json
 }
 
 ### Mark alert as reviewed (replace with real alertReference)
-PATCH {{baseUrl}}/api/fraud-alerts/3fa85f64-5717-4562-b3fc-2c963f66afa6/review
+PATCH {{baseUrl}}/api/fraud-alerts/b88bffcb-77a0-46c5-ae7a-6a7db73e9517/review
 Content-Type: application/json
 
 {
@@ -179,3 +183,28 @@ Content-Type: application/json
 
 ### Get alert statistics
 GET {{baseUrl}}/api/fraud-alerts/statistics
+
+### ============================================================
+### AUDIT LOGS — View change history
+### ============================================================
+
+### Get all audit logs (paginated)
+GET {{baseUrl}}/api/audit-logs?page=1&pageSize=20
+
+### Filter by entity type
+GET {{baseUrl}}/api/audit-logs?entityType=FraudRuleConfiguration
+
+### Filter by entity name (rule name)
+GET {{baseUrl}}/api/audit-logs?entityName=HighValueTransaction
+
+### Filter by who made the change
+GET {{baseUrl}}/api/audit-logs?modifiedBy=admin@capitec.co.za
+
+### Filter by action type (0=Created, 1=Updated, 2=Deleted, 3=Enabled, 4=Disabled)
+GET {{baseUrl}}/api/audit-logs?action=4
+
+### Filter by date range
+GET {{baseUrl}}/api/audit-logs?from=2025-01-01&to=2025-12-31
+
+### Combined filters
+GET {{baseUrl}}/api/audit-logs?entityType=FraudRuleConfiguration&modifiedBy=admin@capitec.co.za&page=1&pageSize=10

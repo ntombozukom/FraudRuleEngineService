@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using FraudEngine.API.Constants;
+using FraudEngine.API.Endpoints.AuditLogs;
 using FraudEngine.API.Endpoints.FraudAlerts;
 using FraudEngine.API.Endpoints.FraudRules;
 using FraudEngine.API.Endpoints.Transactions;
@@ -50,6 +51,8 @@ public static class ApplicationExtensions
         app.MapGetFraudRules();
         app.MapUpdateFraudRule();
 
+        app.MapGetAuditLogs();
+
         return app;
     }
 
@@ -96,6 +99,16 @@ public static class ApplicationExtensions
                     delay.TotalSeconds, ex.Message);
 
                 await Task.Delay(delay);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex,
+                    "Failed to connect to database after {MaxRetries} attempts. Please ensure Docker Desktop is running and execute: docker-compose up -d",
+                    maxRetries);
+
+                throw new InvalidOperationException($"Database connection failed after {maxRetries} attempts. " +
+                    "Ensure Docker Desktop is running and SQL Server container is started. " +
+                    "Run 'docker-compose up -d' to start the database.", ex);
             }
         }
     }

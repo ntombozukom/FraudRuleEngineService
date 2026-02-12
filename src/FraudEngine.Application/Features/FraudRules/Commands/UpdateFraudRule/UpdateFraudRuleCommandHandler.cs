@@ -1,6 +1,8 @@
 using FraudEngine.Application.DTOs;
 using FraudEngine.Application.Mappings;
 using FraudEngine.Application.Services;
+using FraudEngine.Domain.Entities;
+using FraudEngine.Domain.Enums;
 using FraudEngine.Domain.Interfaces;
 using MediatR;
 
@@ -22,18 +24,61 @@ public class UpdateFraudRuleCommandHandler : IRequestHandler<UpdateFraudRuleComm
         var config = await _unitOfWork.FraudRuleConfigurations.GetByRuleNameAsync(request.RuleName, cancellationToken);
         if (config is null) return null;
 
-        if (request.IsEnabled.HasValue)
+        var auditLogs = new List<AuditLog>();
+
+        if (request.IsEnabled.HasValue && config.IsEnabled != request.IsEnabled.Value)
+        {
+            auditLogs.Add(new AuditLog
+            {
+                Id = Guid.NewGuid(),
+                EntityType = nameof(FraudRuleConfiguration),
+                EntityId = config.Id.ToString(),
+                EntityName = config.RuleName,
+                Action = request.IsEnabled.Value ? AuditAction.Enabled : AuditAction.Disabled,
+                PropertyName = nameof(config.IsEnabled),
+                OldValue = config.IsEnabled.ToString(),
+                NewValue = request.IsEnabled.Value.ToString(),
+                ModifiedBy = request.ModifiedBy,
+                ModifiedAt = DateTime.UtcNow
+            });
+
             config.IsEnabled = request.IsEnabled.Value;
+        }
 
-        if (request.Parameters is not null)
+        if (request.Parameters is not null && config.Parameters != request.Parameters)
+        {
+            auditLogs.Add(new AuditLog
+            {
+                Id = Guid.NewGuid(),
+                EntityType = nameof(FraudRuleConfiguration),
+                EntityId = config.Id.ToString(),
+                EntityName = config.RuleName,
+                Action = AuditAction.Updated,
+                PropertyName = nameof(config.Parameters),
+                OldValue = config.Parameters,
+                NewValue = request.Parameters,
+                ModifiedBy = request.ModifiedBy,
+                ModifiedAt = DateTime.UtcNow
+            });
+
             config.Parameters = request.Parameters;
+        }
 
-        config.UpdatedAt = DateTime.UtcNow;
+        if (auditLogs.Count > 0)
+        {
+            config.UpdatedAt = DateTime.UtcNow;
+            config.LastModifiedBy = request.ModifiedBy;
 
-        await _unitOfWork.FraudRuleConfigurations.UpdateAsync(config, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.FraudRuleConfigurations.UpdateAsync(config, cancellationToken);
 
-        await _cache.RefreshAsync(request.RuleName, cancellationToken);
+            foreach (var auditLog in auditLogs)
+            {
+                await _unitOfWork.AuditLogs.AddAsync(auditLog, cancellationToken);
+            }
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _cache.RefreshAsync(request.RuleName, cancellationToken);
+        }
 
         return config.ToDto();
     }

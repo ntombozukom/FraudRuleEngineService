@@ -8,5 +8,7 @@ public class FraudRuleConfiguration
     public string Parameters { get; set; } = "{}";
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string CreatedBy { get; set; } = "System";
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public string? LastModifiedBy { get; set; }
 }
