@@ -11,7 +11,11 @@ public static class FraudRuleMappingExtensions
         RuleName = config.RuleName,
         IsEnabled = config.IsEnabled,
         Parameters = config.Parameters,
-        Description = config.Description
+        Description = config.Description,
+        CreatedAt = config.CreatedAt,
+        CreatedBy = config.CreatedBy,
+        UpdatedAt = config.UpdatedAt,
+        LastModifiedBy = config.LastModifiedBy
     };
 
     public static IEnumerable<FraudRuleDto> ToDto(this IEnumerable<FraudRuleConfiguration> configs) =>

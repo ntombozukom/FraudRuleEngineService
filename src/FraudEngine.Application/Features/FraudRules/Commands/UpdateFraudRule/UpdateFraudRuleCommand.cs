@@ -8,4 +8,5 @@ public class UpdateFraudRuleCommand : IRequest<FraudRuleDto?>
     public string RuleName { get; set; } = string.Empty;
     public bool? IsEnabled { get; set; }
     public string? Parameters { get; set; }
+    public string ModifiedBy { get; set; } = string.Empty;
 }

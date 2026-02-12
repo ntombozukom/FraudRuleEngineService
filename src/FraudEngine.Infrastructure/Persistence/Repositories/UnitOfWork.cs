@@ -12,11 +12,13 @@ public class UnitOfWork : IUnitOfWork
         Transactions = new TransactionRepository(context);
         FraudAlerts = new FraudAlertRepository(context);
         FraudRuleConfigurations = new FraudRuleConfigurationRepository(context);
+        AuditLogs = new AuditLogRepository(context);
     }
 
     public ITransactionRepository Transactions { get; }
     public IFraudAlertRepository FraudAlerts { get; }
     public IFraudRuleConfigurationRepository FraudRuleConfigurations { get; }
+    public IAuditLogRepository AuditLogs { get; }
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
